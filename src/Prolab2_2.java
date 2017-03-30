@@ -1,50 +1,36 @@
-import java.awt.AWTEvent;
+import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.MouseInfo;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseListener;
-import java.awt.geom.Line2D;
-
+import java.util.concurrent.TimeUnit;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
-import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JPasswordField;
-import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
-import org.w3c.dom.events.MouseEvent;
-
 public class Prolab2_2 extends JFrame {
-	
-	private static Node root = null;
-	public static int RootX;
-	public static int RootY;
-	
+	public static boolean btnControl = false;
+	private static Node root = null;	
+	public static int asciiCode=65; 
 	public static int ParentX;
 	public static int ParentY;
-	
 	public static int ParentTopX;
 	public static int ParentTopY;
-	
 	public static int ParentBotX;
 	public static int ParentBotY;
-	
-	
+
 	public static boolean Control=false;
-    private JFrame pencere = new JFrame(); 
+    private static JFrame pencere = new JFrame(); 
     private JLabel labelUsername = new JLabel("Hoþ Geldiniz");
-    private JButton buttonRandom = new JButton("Random Number");
-    private JButton buttonNaNRandom = new JButton("Randomsuz");
-    protected static int click =0;
-     
+    private JButton buttonClick = new JButton("Click");
+    private JButton buttonRandom = new JButton("Random");
+    private JButton buttonClear = new JButton("Temizle");
     public Prolab2_2() {
         super("JPanel Demo Program");
         // create a new panel with GridBagLayout manager
@@ -65,14 +51,21 @@ public class Prolab2_2 extends JFrame {
         constraints.gridx = 0;
         constraints.gridy = 2;
         constraints.gridwidth = 2;
+        //constraints.weightx=150;
       
-        newPanel.add(buttonRandom, constraints);
+        newPanel.add(buttonClick, constraints);
         
         constraints.gridx = 2;
         constraints.gridy = 2;
         constraints.gridwidth = 2;
         //constraints.anchor = GridBagConstraints.CENTER;
-        newPanel.add(buttonNaNRandom, constraints);
+        newPanel.add(buttonRandom, constraints);
+        
+        constraints.gridx = 0;
+        constraints.gridy = 5;
+        constraints.gridwidth = 10;
+        constraints.anchor = GridBagConstraints.CENTER;
+        newPanel.add(buttonClear, constraints);
          
         // set border for the panel
         newPanel.setBorder(BorderFactory.createTitledBorder(
@@ -85,125 +78,17 @@ public class Prolab2_2 extends JFrame {
         setLocationRelativeTo(null);
         
         pencere.setSize(512,512);
-        
+		pencere.setVisible(true);
+		
     	pencere.addMouseListener(new MouseListener(){
 
 			@Override
 			public void mouseClicked(java.awt.event.MouseEvent e) {
-			    Graphics g = pencere.getGraphics();
-				int x=e.getX();
-			    int y=e.getY();
-			    
-			    if(Control == false)
-			    {
-			    	
-			    	Control=true;
-			    	for(int i =0;i<512;i++)
-			    	{
-			    		g.drawString("-", i, y);
-			    		g.drawString("|", x, i);
-			    	}
-			    	RootX =x;
-			    	RootY =y;
-			    	insert(x,y,512,0,512,0,1);
-			    	
-			    }else
-			    {
-			    	insert(x,y,0,0,0,0,0);
-			    	if(x<ParentX && y<ParentY) //2.bolge
-			    	{
-			    		int maxX=0,minX=0,maxY=0,minY=0;
-			    		
-			    		minX = ParentBotX;
-			    		maxX = ParentX;
-			    		
-			    		maxY = ParentY;
-			    		minY = ParentTopY;
-			    		
-			    		for(int i=minX;i<maxX;i++)
-			    		{
-			    			g.drawString("-",i,y);
-			    		}
-			    		
-			    		for(int i=minY; i < maxY ;i++)
-			    		{
-			    			g.drawString("|",x,i);
-			    		}
-			    		
-			    		insert(x,y,maxX,minX,maxY,minY,1);
-			    	}
-			    	if(x<ParentX && y>ParentY) // 3. bolge
-			    	{
-			    		int maxX=0,minX=0,maxY=0,minY=0;
-			    		
-			    		minX = ParentBotX;
-			    		maxX = ParentX;
-			    		
-			    		maxY = ParentBotY;
-			    		minY = ParentY;
-			    		
-			    		for(int i=minX;i<maxX;i++)
-			    		{
-			    			g.drawString("-",i,y);
-			    		}
-			    		
-			    		for(int i=minY; i < maxY ;i++)
-			    		{
-			    			g.drawString("|",x,i);
-			    		}
-			    		
-			    		insert(x,y,maxX,minX,maxY,minY,1);
-			    	}
-			    	if(x>ParentX && y<ParentY) // 1. bolge
-			    	{
-			    		int maxX=0,minX=0,maxY=0,minY=0;
-			    		
-			    		minX = ParentX;
-			    		maxX = ParentTopX;
-			    		
-			    		maxY = ParentY;
-			    		minY = ParentTopY;
-			    		
-			    		for(int i=minX;i<maxX;i++)
-			    		{
-			    			g.drawString("-",i,y);
-			    		}
-			    		
-			    		for(int i=minY; i < maxY ;i++)
-			    		{
-			    			g.drawString("|",x,i);
-			    		}
-			    		
-			    		insert(x,y,maxX,minX,maxY,minY,1);
-			    		
-			    		
-			    	}
-			    	if(x>ParentX && y>ParentY) //4. bolge
-			    	{
-			    		int maxX=0,minX=0,maxY=0,minY=0;
-			    		
-			    		minX=ParentX;
-			    		maxX=ParentTopX;
-			    		minY=ParentY;
-			    		maxY=ParentBotY;
-			    		
-			    		for(int i=minX; i<maxX ;i++)
-			    		{
-			    			g.drawString("-",i,y);
-			    		}
-			    		
-			    		for(int i=minY; i < maxY ;i++)
-			    		{
-			    			g.drawString("|",x,i);
-			    		}
-			    		
-			    		insert(x,y,maxX,minX,maxY,minY,1); 
-			    	}
-			    }
-			   
-			    g.drawString("X", x, y);
+				if(btnControl)
+				{
+					Draw(e.getX(),e.getY());
+				}
 				
-				click++;
 			}
 			@Override
 			public void mouseEntered(java.awt.event.MouseEvent e) {
@@ -227,18 +112,55 @@ public class Prolab2_2 extends JFrame {
 			}
     	});
         
-        buttonRandom.addActionListener(new ActionListener() { 
+    	buttonClick.addActionListener(new ActionListener() { 
         	  public void actionPerformed(ActionEvent e) { 
-        		  pencere.setVisible(true);
+        		  Clear();
+        		  btnControl = true;
         	  } 
         	} );
         
-        buttonNaNRandom.addActionListener(new ActionListener(){
+        buttonRandom.addActionListener(new ActionListener(){
         	public void actionPerformed(ActionEvent e){
-        		display(root);
-        		System.out.println("______________________________");
+        		Clear();
+        		Random();
+        		btnControl = false;
+
         	}
         });
+        buttonClear.addActionListener(new ActionListener(){
+        	public void actionPerformed(ActionEvent e){
+        		Clear();
+        		
+        	}
+        });
+    }
+    public static void Random()
+    {
+    	  int x,y,tmp;
+    	  int [] coordinatesX = new int[512];
+    	  int [] coordinatesY = new int[512];
+    	  for(int i=0;i<512;i++)
+    	  {
+    		  coordinatesX[i] =i;
+    		  coordinatesY[i] =i;
+    	  }
+    	  for(int i=0;i<512;i++)
+    	  {
+    		  x = (int)(Math.random() * 512);
+    		  y = (int)(Math.random() * 512);
+    		  
+    		  tmp = coordinatesX[i];
+			  coordinatesX[i] = coordinatesX[x];
+			  coordinatesX[x] = tmp;
+			  
+			  tmp = coordinatesY[i];
+			  coordinatesY[i] = coordinatesY[x];
+			  coordinatesY[x] = tmp;
+    	  }
+		  for(int i=0;i<20;i++)
+		  {
+			  Draw(coordinatesX[i],coordinatesY[511-i]);
+		  }
     }
     public static void main(String[] args) {
         
@@ -248,21 +170,17 @@ public class Prolab2_2 extends JFrame {
                 new Prolab2_2().setVisible(true);
             }
         });
-        
-        
     }
-    public static void insert(int x,int y,int maxX,int minX,int maxY,int minY,int kontrol)
+    public static void insert(int x,int y,int maxX,int minX,int maxY,int minY,int kontrol,String Name)
 	{
-		Node newNode = new Node(x,y,maxX,minX,maxY,minY,kontrol);
-		if(root==null){		
+		Node newNode = new Node(x,y,maxX,minX,maxY,minY,kontrol,Name); // yeni dugum olustur
+		if(root==null){	// ana dugumu olustur	
 			ParentX = x;
 			ParentY = y;
-			
-			ParentTopX = 0;
+			ParentTopX = 0; //baslangic max degerlerini ata
 			ParentTopY = 0;
 			ParentBotX = 512;
 			ParentBotY = 512;
-			
 			root = newNode;
 			return;
 		}
@@ -270,107 +188,93 @@ public class Prolab2_2 extends JFrame {
 		Node current = root;
 		Node parent = null;
 		
-		while(true){
+		while(true){ // hedef dugume gidene kadar bam bam bam ilerle
 			parent = current;
 			if(x < current.x && y < current.y){ //2.Bolge		
-				if(current != null)
+				if(current != null) // parent bilgileri al
 				{
 					ParentX = current.x;
-					ParentY = current.y;
-					
+					ParentY = current.y;			
 					ParentTopX = current.TopX;
 					ParentTopY = current.TopY;
-					
 					ParentBotX = current.BottomX;
 					ParentBotY = current.BottomY;
 				}
-				
-				current = current.x1y1;
-				
+				current = current.x1y1; //sonraki dugume ilerle
 				if(current==null){
-					if(kontrol == 0)
+					if(kontrol == 0) //parent bilgileri al ve geri don
 					{
 						return;
 					}else
 					{
-						parent.x1y1 = newNode;
+						parent.x1y1 = newNode; // yeni dugum ekle
 						return;
 					}
 					
 					
 				}
 			}else if(x < current.x && y > current.y){ //3.Bolge
-				if(current != null)
+				if(current != null) // parent bilgilerini al
 				{
 					ParentX = current.x;
 					ParentY = current.y;
-					
 					ParentTopX = current.TopX;
 					ParentTopY = current.TopY;
 					ParentBotX = current.BottomX;
 					ParentBotY = current.BottomY;
-				}
-				
-				current = current.x1y2;
-				
+				}				
+				current = current.x1y2; // sonraki dugume git
 				if(current==null){
-					if(kontrol == 0)
+					if(kontrol == 0) // parent bilgileri al geri don
 					{
 						return;
 					}else
 					{
-						parent.x1y2 = newNode;
+						parent.x1y2 = newNode; // yeni dugum ekel
 						return;
 					}
 				}
 			}
 				else if(x > current.x && y > current.y){ //4.Bolge
-					if(current != null)
+					if(current != null) // Parent Bilgilerini Al
 					{
 						ParentX = current.x;
 						ParentY = current.y;
-						
 						ParentTopX = current.TopX;
 						ParentTopY = current.TopY;
 						ParentBotX = current.BottomX;
 						ParentBotY = current.BottomY;
 					}
-					
-					current = current.x2y2;
-					
+					current = current.x2y2; // sonraki dugume git
 					if(current==null){
-						if(kontrol == 0)
+						if(kontrol == 0) //parent bilgilerini al don
 						{
 							return;
 						}else
 						{
-							parent.x2y2 = newNode;
+							parent.x2y2 = newNode; // yeni dugumu ekle
 							return;
 						}
 					}
 				}
 				else if(x > current.x && y < current.y){ //1.Bolge
-					if(current != null)
+					if(current != null) //Parent Bilgilerini al
 					{
 						ParentX = current.x;
 						ParentY = current.y;
-						
 						ParentTopX = current.TopX;
 						ParentTopY = current.TopY;
 						ParentBotX = current.BottomX;
 						ParentBotY = current.BottomY;
-						
 					}
-					
-					current = current.x2y1;
-					
-					if(current==null){
-						if(kontrol == 0)
+					current = current.x2y1; //sonraki dugume ilerle
+					if(current==null){ 
+						if(kontrol == 0) //parent bilgileri için
 						{
 							return;
 						}else
 						{
-							parent.x2y1 = newNode;
+							parent.x2y1 = newNode; // yeni dugum ekle
 							return;
 						}
 					}
@@ -388,6 +292,132 @@ public class Prolab2_2 extends JFrame {
 			display(gecici.x2y1);					
 		}	
 	}
+    
+    public void Clear()
+    {
+    	asciiCode=65; 
+    	root=null;
+    	Control = false;
+    	Graphics g = pencere.getGraphics();
+    	g.setColor(pencere.getBackground());
+        g.fillRect(0, 0, 512, 512);
+    }
+    public static void Draw(int coordinateX,int coordinateY)
+    {
+    	String NodeName = Character.toString ((char) asciiCode);
+		asciiCode++; // dugum isimlerinin artýrýlmasý
+		System.out.println(NodeName);
+	    int R = (int) (Math.random( )*256); // random renk olustur
+	    int G = (int)(Math.random( )*256);
+	    int B= (int)(Math.random( )*256);
+	    Color randomColor = new Color(R, G, B);
+	    Graphics g = pencere.getGraphics();
+	    g.setColor(randomColor);
+	    
+	    int x = coordinateX; // tiklanan yerden coordinat al
+	    int y = coordinateY;
+	    
+	    if(Control == false) // ilk dugum mu kontrolu
+	    {
+	    	Control=true;
+	    	for(int i =0;i<512;i++)
+	    	{
+	    		g.drawString("-", i, y);
+	    		g.drawString("|", x, i);
+	    	}
+	    	insert(x,y,512,0,512,0,1,NodeName); // ekle
+	    	
+	    }else
+	    {
+	    	insert(x,y,0,0,0,0,0,"a"); // parent bilgilerini al
+	    	if(x<ParentX && y<ParentY) //2.bolge
+	    	{
+	    		int maxX=0,minX=0,maxY=0,minY=0;
+	    		
+	    		minX = ParentBotX;
+	    		maxX = ParentX;
+	    		maxY = ParentY;
+	    		minY = ParentTopY;
+	    		
+	    		for(int i=minX;i<maxX;i++)
+	    		{
+	    			g.drawString("-",i,y);
+	    		}
+	    		
+	    		for(int i=minY+5; i < maxY-5 ;i++)
+	    		{
+	    			g.drawString("|",x,i);
+	    		}
+	    		
+	    		insert(x,y,maxX,minX,maxY,minY,1,NodeName);
+	    	}
+	    	if(x<ParentX && y>ParentY) // 3. bolge
+	    	{
+	    		int maxX=0,minX=0,maxY=0,minY=0;
+	    		
+	    		minX = ParentBotX;
+	    		maxX = ParentX;
+	    		maxY = ParentBotY;
+	    		minY = ParentY;
+	    		
+	    		for(int i=minX;i<maxX;i++) // draw x coordinates
+	    		{
+	    			g.drawString("-",i,y);
+	    		}
+	    		for(int i=minY+5; i < maxY-5 ;i++) // draw y coordinates
+	    		{
+	    			g.drawString("|",x,i);
+	    		}			    		
+	    		insert(x,y,maxX,minX,maxY,minY,1,NodeName);
+	    	}
+	    	if(x>ParentX && y<ParentY) // 1. bolge
+	    	{
+	    		int maxX=0,minX=0,maxY=0,minY=0;
+	    		
+	    		minX = ParentX;
+	    		maxX = ParentTopX;
+	    		
+	    		maxY = ParentY;
+	    		minY = ParentTopY;
+	    		
+	    		for(int i=minX;i<maxX;i++)
+	    		{
+	    			g.drawString("-",i,y);
+	    		}
+	    		
+	    		for(int i=minY+5; i < maxY-5;i++)
+	    		{
+	    			g.drawString("|",x,i);
+	    		}
+	    		
+	    		insert(x,y,maxX,minX,maxY,minY,1,NodeName);
+	    		
+	    		
+	    	}
+	    	if(x>ParentX && y>ParentY) //4. bolge
+	    	{
+	    		int maxX=0,minX=0,maxY=0,minY=0;
+	    		
+	    		minX=ParentX;
+	    		maxX=ParentTopX;
+	    		minY=ParentY;
+	    		maxY=ParentBotY;
+	    		
+	    		for(int i=minX; i<maxX ;i++)
+	    		{
+	    			g.drawString("-",i,y);
+	    		}
+	    		
+	    		for(int i=minY+5; i < maxY-5 ;i++)
+	    		{
+	    			g.drawString("|",x,i);
+	    		}
+	    		
+	    		insert(x,y,maxX,minX,maxY,minY,1,NodeName); 
+	    	}
+	    }
+	    g.drawString(NodeName, x+3, y-5);
+    }
     
 }
 
