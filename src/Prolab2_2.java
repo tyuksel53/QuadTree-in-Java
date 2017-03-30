@@ -112,48 +112,20 @@ public class Prolab2_2 extends JFrame {
 			    	insert(x,y,0,0,0,0,0);
 			    	if(x<ParentX && y<ParentY) //2.bolge
 			    	{
-			    		int beginX,endX,beginY,endY,maxX=0,minX=0,maxY=0,minY=0;
-			    		maxX=512;
-			    		minX=ParentX;
-			    		maxY=ParentY;
-			    		minY=0;
-			    		endX=ParentX;
-			    		beginY=0;
-			    		endY=ParentY;
-			    		beginX = 0;
+			    		int maxX=0,minX=0,maxY=0,minY=0;
 			    		
-			    		if(RootX > ParentX && RootY > ParentY)
-			    		{
-			    			System.out.println("as");
-			    			endX = RootX;
-			    		}
-			    		if(RootX < ParentX && RootY > ParentY)
-			    		{
-			    			System.out.println("ad");
-			    			beginY = ParentBotY;
-			    			minY = ParentBotY;
-			    		}
-			    		if(RootX < ParentX && RootY < ParentY)
-			    		{
-			    			System.out.println("s");
-
-			    			beginY=ParentBotY;
-			    			minY=ParentBotY;
-			    		}
+			    		minX = ParentBotX;
+			    		maxX = ParentX;
 			    		
-			    		if(RootX > ParentX && RootY < ParentY)
-			    		{
-			    			System.out.println("d");
-			    			endX = RootX;
-			    			beginY = RootY;
-			    		}
+			    		maxY = ParentY;
+			    		minY = ParentTopY;
 			    		
-			    		for(int i=beginX;i<endX;i++)
+			    		for(int i=minX;i<maxX;i++)
 			    		{
 			    			g.drawString("-",i,y);
 			    		}
 			    		
-			    		for(int i=beginY; i < endY ;i++)
+			    		for(int i=minY; i < maxY ;i++)
 			    		{
 			    			g.drawString("|",x,i);
 			    		}
@@ -162,70 +134,42 @@ public class Prolab2_2 extends JFrame {
 			    	}
 			    	if(x<ParentX && y>ParentY) // 3. bolge
 			    	{
-			    		int beginX,endX,beginY,endY;
-			    		beginX=0;
-			    		beginY=ParentY;
-			    		endY=512;
-			    		endX = ParentX;
+			    		int maxX=0,minX=0,maxY=0,minY=0;
 			    		
-			    		for(int i=beginX;i<endX;i++)
+			    		minX = ParentBotX;
+			    		maxX = ParentX;
+			    		
+			    		maxY = ParentBotY;
+			    		minY = ParentY;
+			    		
+			    		for(int i=minX;i<maxX;i++)
 			    		{
 			    			g.drawString("-",i,y);
 			    		}
 			    		
-			    		for(int i=beginY; i < endY ;i++)
+			    		for(int i=minY; i < maxY ;i++)
 			    		{
 			    			g.drawString("|",x,i);
 			    		}
 			    		
-			    		insert(x,y,0,0,0,0,1);
+			    		insert(x,y,maxX,minX,maxY,minY,1);
 			    	}
 			    	if(x>ParentX && y<ParentY) // 1. bolge
 			    	{
-			    		int beginX,endX,beginY,endY,maxX=0,minX=0,maxY=0,minY=0;
-			    		maxX=512;
-			    		minX=ParentX;
-			    		maxY=ParentY;
-			    		minY=0;
-			    		beginX=ParentX;
-			    		beginY=0;
-			    		endY=ParentY;
-			    		endX = 512;
+			    		int maxX=0,minX=0,maxY=0,minY=0;
 			    		
-			    		if(RootX > ParentX && RootY > ParentY)
-			    		{
-			    			System.out.println("akl");
-			    			endX = RootX;
-			    			beginY = ParentTopX;
-			    		}
-			    		if(RootX < ParentX && RootY > ParentY)
-			    		{
-			    			System.out.println("aq");
-			    			
-			    			beginY = ParentBotY;
-			    			minY = ParentBotY;
-			    		}
-			    		if(RootX < ParentX && RootY < ParentY)
-			    		{
-			    			System.out.println("s");
-
-			    			beginY=ParentBotY;
-			    			minY=ParentBotY;
-			    		}
+			    		minX = ParentX;
+			    		maxX = ParentTopX;
 			    		
-			    		if(RootX > ParentX && RootY < ParentY)
-			    		{
-			    			System.out.println("d");
-			    			endX = RootX;
-			    			beginY = RootY;
-			    		}
+			    		maxY = ParentY;
+			    		minY = ParentTopY;
 			    		
-			    		for(int i=beginX;i<endX;i++)
+			    		for(int i=minX;i<maxX;i++)
 			    		{
 			    			g.drawString("-",i,y);
 			    		}
 			    		
-			    		for(int i=beginY; i < endY ;i++)
+			    		for(int i=minY; i < maxY ;i++)
 			    		{
 			    			g.drawString("|",x,i);
 			    		}
@@ -236,55 +180,24 @@ public class Prolab2_2 extends JFrame {
 			    	}
 			    	if(x>ParentX && y>ParentY) //4. bolge
 			    	{
+			    		int maxX=0,minX=0,maxY=0,minY=0;
 			    		
-			    		int beginX,endX,beginY,endY,maxX=0,minX=0,maxY=0,minY=0;
-			    		
-			    		maxX=512;
 			    		minX=ParentX;
+			    		maxX=ParentTopX;
 			    		minY=ParentY;
-			    		maxY=512;
+			    		maxY=ParentBotY;
 			    		
-			    		beginX=ParentX;
-			    		beginY=ParentY;
-			    		endY=512;
-			    		endX = 512;
-			    		
-			    		if(RootX > ParentX && RootY < ParentY)
-			    		{
-			    			System.out.println("aw");
-			    			endX = RootX;
-			    		}
-			    		if(RootX > ParentX && RootY > ParentY)
-			    		{
-			    			System.out.println("da");
-			    			endY = RootY;
-			    			endX = RootX;
-			    			minX = RootX;
-			    			minY = RootY;
-			    		}
-			    		if(RootX < ParentX && RootY < ParentY)
-			    		{
-			    			System.out.println("sa");
-			    			beginY=ParentY;
-			    		}
-			    		
-			    		if(RootX < ParentX && RootY > ParentY)
-			    		{
-			    			System.out.println("d");
-			    			endY = RootY;
-			    		}
-			    		
-			    		for(int i=beginX; i<endX ;i++)
+			    		for(int i=minX; i<maxX ;i++)
 			    		{
 			    			g.drawString("-",i,y);
 			    		}
 			    		
-			    		for(int i=beginY; i < endY ;i++)
+			    		for(int i=minY; i < maxY ;i++)
 			    		{
 			    			g.drawString("|",x,i);
 			    		}
 			    		
-			    		insert(x,y,maxX,minX,maxY,minY,1);
+			    		insert(x,y,maxX,minX,maxY,minY,1); 
 			    	}
 			    }
 			   
@@ -359,7 +272,7 @@ public class Prolab2_2 extends JFrame {
 		
 		while(true){
 			parent = current;
-			if(x < current.x && y < current.y){				
+			if(x < current.x && y < current.y){ //2.Bolge		
 				if(current != null)
 				{
 					ParentX = current.x;
@@ -367,6 +280,7 @@ public class Prolab2_2 extends JFrame {
 					
 					ParentTopX = current.TopX;
 					ParentTopY = current.TopY;
+					
 					ParentBotX = current.BottomX;
 					ParentBotY = current.BottomY;
 				}
@@ -385,7 +299,7 @@ public class Prolab2_2 extends JFrame {
 					
 					
 				}
-			}else if(x < current.x && y > current.y){
+			}else if(x < current.x && y > current.y){ //3.Bolge
 				if(current != null)
 				{
 					ParentX = current.x;
@@ -410,7 +324,7 @@ public class Prolab2_2 extends JFrame {
 					}
 				}
 			}
-				else if(x > current.x && y > current.y){
+				else if(x > current.x && y > current.y){ //4.Bolge
 					if(current != null)
 					{
 						ParentX = current.x;
@@ -435,7 +349,7 @@ public class Prolab2_2 extends JFrame {
 						}
 					}
 				}
-				else if(x > current.x && y < current.y){
+				else if(x > current.x && y < current.y){ //1.Bolge
 					if(current != null)
 					{
 						ParentX = current.x;
