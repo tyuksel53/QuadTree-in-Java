@@ -1,4 +1,5 @@
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -6,16 +7,20 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseListener;
-import java.util.concurrent.TimeUnit;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JSlider;
 import javax.swing.SwingUtilities;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 public class Prolab2_2 extends JFrame {
+	
 	public static boolean btnControl = false;
+	
 	private static Node root = null;	
 	public static int asciiCode=65; 
 	public static int ParentX;
@@ -24,13 +29,25 @@ public class Prolab2_2 extends JFrame {
 	public static int ParentTopY;
 	public static int ParentBotX;
 	public static int ParentBotY;
-
+	public static boolean ControlSearch = false;
+	public static boolean ControlSearchClick = false;
 	public static boolean Control=false;
+	public static Graphics sh;
+	public static int sliderDeger = 1;
+	public static int DaireCap = 10;
+	public static int DaireX=0,DaireY=0;
     private static JFrame pencere = new JFrame(); 
     private JLabel labelUsername = new JLabel("Hoþ Geldiniz");
     private JButton buttonClick = new JButton("Click");
     private JButton buttonRandom = new JButton("Random");
     private JButton buttonClear = new JButton("Temizle");
+    private JButton buttonWrite = new JButton("Yaz");
+    private JButton buttonSearch = new JButton("Arama");
+    public static int FPS_MIN = 0;
+    public static int FPS_MAX = 10;
+    public static int FPS_INIT = 0;    //initial frames per second
+    private JSlider slider = new JSlider(JSlider.HORIZONTAL,FPS_MIN, FPS_MAX, FPS_INIT);
+    
     public Prolab2_2() {
         super("JPanel Demo Program");
         // create a new panel with GridBagLayout manager
@@ -39,7 +56,13 @@ public class Prolab2_2 extends JFrame {
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.anchor = GridBagConstraints.WEST;
         constraints.insets = new Insets(10, 10, 10, 10);
-        
+        slider.setMinorTickSpacing(2);
+        slider.setMajorTickSpacing(10);
+        slider.setPaintTicks(true);
+        slider.setPaintLabels(true);
+
+        // We'll just use the standard numeric labels for now...
+        slider.setLabelTable(slider.createStandardLabels(10));
          
         // add components to the panel
         constraints.gridx = 0;
@@ -47,26 +70,44 @@ public class Prolab2_2 extends JFrame {
         constraints.gridwidth = 10;
         constraints.anchor = GridBagConstraints.CENTER;
         newPanel.add(labelUsername, constraints);
- 
+        
         constraints.gridx = 0;
         constraints.gridy = 2;
         constraints.gridwidth = 2;
-        //constraints.weightx=150;
-      
+        buttonClick.setPreferredSize(new Dimension(100, 25));
         newPanel.add(buttonClick, constraints);
         
-        constraints.gridx = 2;
+        constraints.gridx = 3;
         constraints.gridy = 2;
+        constraints.gridwidth = 1;
+        buttonRandom.setPreferredSize(new Dimension(100, 25));
+        newPanel.add(buttonRandom, constraints);
+        
+        constraints.gridx = 3;
+        constraints.gridy = 5;
         constraints.gridwidth = 2;
         //constraints.anchor = GridBagConstraints.CENTER;
-        newPanel.add(buttonRandom, constraints);
+        buttonWrite.setPreferredSize(new Dimension(100, 25));
+        newPanel.add(buttonWrite, constraints);
         
         constraints.gridx = 0;
         constraints.gridy = 5;
-        constraints.gridwidth = 10;
-        constraints.anchor = GridBagConstraints.CENTER;
+        constraints.gridwidth = 2;
+        //constraints.anchor = GridBagConstraints.CENTER;
+        buttonSearch.setPreferredSize(new Dimension(100, 25));
+        newPanel.add(buttonSearch, constraints);
+       
+        constraints.gridx = 0;
+        constraints.gridy = 6;
+        constraints.gridwidth = 2;
+        buttonClear.setPreferredSize(new Dimension(100, 25));
         newPanel.add(buttonClear, constraints);
-         
+        
+        constraints.gridx = 2;
+        constraints.gridy = 5;
+        constraints.gridwidth = 1;
+        newPanel.add(slider, constraints);
+        
         // set border for the panel
         newPanel.setBorder(BorderFactory.createTitledBorder(
                 BorderFactory.createEtchedBorder(), "QuarTree ProlabII-II"));
@@ -79,7 +120,7 @@ public class Prolab2_2 extends JFrame {
         
         pencere.setSize(512,512);
 		pencere.setVisible(true);
-		
+		Graphics sh = pencere.getGraphics();
     	pencere.addMouseListener(new MouseListener(){
 
 			@Override
@@ -87,6 +128,16 @@ public class Prolab2_2 extends JFrame {
 				if(btnControl)
 				{
 					Draw(e.getX(),e.getY());
+				}
+				if(ControlSearch)
+				{
+					sh.setColor(pencere.getBackground());
+    	        	sh.drawOval(DaireX, DaireY, DaireCap * sliderDeger, DaireCap * sliderDeger);
+    	        	sh.setColor(Color.RED);
+					sh.drawOval(e.getX(), e.getY(), DaireCap * sliderDeger, DaireCap * sliderDeger);
+    	        	DaireX = e.getX();
+    	        	DaireY = e.getY();
+    	        	ControlSearchClick = true;
 				}
 				
 			}
@@ -111,11 +162,31 @@ public class Prolab2_2 extends JFrame {
 				
 			}
     	});
+    	
+    	slider.addChangeListener(new ChangeListener() {
+    	      public void stateChanged(ChangeEvent event) {
+    	        if(ControlSearch)
+    	        {
+    	        	if(ControlSearchClick)
+    	        	{
+    	        		sh.setColor(pencere.getBackground());
+        	        	sh.drawOval(DaireX, DaireY, DaireCap * sliderDeger, DaireCap * sliderDeger);
+        	        	
+        	        	sh.setColor(Color.RED);
+        	        	sliderDeger = slider.getValue();
+    					sh.drawOval(DaireX, DaireY, DaireCap * sliderDeger, DaireCap * sliderDeger);
+    					
+    	        	}
+    	        }
+				
+    	      }
+    	    });
         
     	buttonClick.addActionListener(new ActionListener() { 
         	  public void actionPerformed(ActionEvent e) { 
-        		  Clear();
         		  btnControl = true;
+        		  ControlSearch = false;
+        		  ControlSearchClick = false;
         	  } 
         	} );
         
@@ -124,13 +195,25 @@ public class Prolab2_2 extends JFrame {
         		Clear();
         		Random();
         		btnControl = false;
-
+        		ControlSearch = false;
+        		ControlSearchClick = false;
         	}
         });
         buttonClear.addActionListener(new ActionListener(){
         	public void actionPerformed(ActionEvent e){
         		Clear();
         		
+        	}
+        });
+        buttonWrite.addActionListener(new ActionListener(){
+        	public void actionPerformed(ActionEvent e){
+        		
+        	}
+        });
+        buttonSearch.addActionListener(new ActionListener(){
+        	public void actionPerformed(ActionEvent e){
+        		ControlSearch = true;
+        		btnControl = false;
         	}
         });
     }
@@ -157,7 +240,7 @@ public class Prolab2_2 extends JFrame {
 			  coordinatesY[i] = coordinatesY[x];
 			  coordinatesY[x] = tmp;
     	  }
-		  for(int i=0;i<20;i++)
+		  for(int i=0;i<500;i++)
 		  {
 			  Draw(coordinatesX[i],coordinatesY[511-i]);
 		  }
