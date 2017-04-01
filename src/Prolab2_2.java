@@ -7,6 +7,11 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseListener;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -127,16 +132,16 @@ public class Prolab2_2 extends JFrame {
 			public void mouseClicked(java.awt.event.MouseEvent e) {
 				if(btnControl)
 				{
-					Draw(e.getX(),e.getY());
+					Draw(e.getX()-1,e.getY()+5);
 				}
 				if(ControlSearch)
 				{
 					sh.setColor(pencere.getBackground());
-    	        	sh.drawOval(DaireX, DaireY, DaireCap * sliderDeger, DaireCap * sliderDeger);
+    	        	sh.drawOval(DaireX  - ((DaireCap * sliderDeger)/2) , DaireY  - ((DaireCap * sliderDeger)/2), DaireCap * sliderDeger, DaireCap * sliderDeger);
     	        	sh.setColor(Color.RED);
-					sh.drawOval(e.getX(), e.getY(), DaireCap * sliderDeger, DaireCap * sliderDeger);
     	        	DaireX = e.getX();
     	        	DaireY = e.getY();
+					sh.drawOval(DaireX - ((DaireCap * sliderDeger)/2), DaireY - ((DaireCap * sliderDeger)/2), DaireCap * sliderDeger, DaireCap * sliderDeger);
     	        	ControlSearchClick = true;
 				}
 				
@@ -170,11 +175,11 @@ public class Prolab2_2 extends JFrame {
     	        	if(ControlSearchClick)
     	        	{
     	        		sh.setColor(pencere.getBackground());
-        	        	sh.drawOval(DaireX, DaireY, DaireCap * sliderDeger, DaireCap * sliderDeger);
+        	        	sh.drawOval(DaireX- ((DaireCap * sliderDeger)/2) , DaireY - ((DaireCap * sliderDeger)/2) , DaireCap * sliderDeger, DaireCap * sliderDeger);
         	        	
         	        	sh.setColor(Color.RED);
         	        	sliderDeger = slider.getValue();
-    					sh.drawOval(DaireX, DaireY, DaireCap * sliderDeger, DaireCap * sliderDeger);
+    					sh.drawOval(DaireX - ((DaireCap * sliderDeger)/2), DaireY - ((DaireCap * sliderDeger)/2), DaireCap * sliderDeger, DaireCap * sliderDeger);
     					
     	        	}
     	        }
@@ -207,7 +212,7 @@ public class Prolab2_2 extends JFrame {
         });
         buttonWrite.addActionListener(new ActionListener(){
         	public void actionPerformed(ActionEvent e){
-        		
+        		find(root);
         	}
         });
         buttonSearch.addActionListener(new ActionListener(){
@@ -364,15 +369,36 @@ public class Prolab2_2 extends JFrame {
 				}
 			}
 	}
-    public static void display(Node gecici)
+    public static void find(Node gecici)
 	{
+
 		if(gecici!=null)
 		{
-			System.out.println("Values: x: " + gecici.x + " - y: " + gecici.y);
-			display(gecici.x2y2);
-			display(gecici.x1y2);
-			display(gecici.x1y1);
-			display(gecici.x2y1);					
+			double icerde_Misin = Math.sqrt( Math.pow(Math.abs(DaireX - gecici.x),2)  +  Math.pow(Math.abs(DaireY+4 - gecici.y),2) ) ;
+			if( icerde_Misin <= (double) ( DaireCap * sliderDeger)/2 )
+			{
+				System.out.println("Name : "+ gecici.ParentName + "Values: x: " + gecici.x + " - y: " + gecici.y);
+				Graphics p = pencere.getGraphics();
+				p.setColor(Color.RED);
+				p.fillOval(gecici.x-4, gecici.y-8,10,10);
+				File log = new File("C:\\Users\\Taha\\Desktop\\Result.txt");
+					    try{
+					    if(log.exists()==false){
+					            System.out.println("file mile yok bam bam bam");
+					            log.createNewFile();
+					    }
+					    PrintWriter out = new PrintWriter(new FileWriter(log, true));
+					    out.println("Name : "+ gecici.ParentName + " | - x: " + gecici.x + " - y: " + gecici.y);
+					    out.close();
+					    }catch(IOException e){
+					        System.out.println(e.getMessage());
+					    }
+			}
+			find(gecici.x2y2);
+			find(gecici.x1y2);
+			find(gecici.x1y1);
+			find(gecici.x2y1);			
+			
 		}	
 	}
     
@@ -499,7 +525,8 @@ public class Prolab2_2 extends JFrame {
 	    		insert(x,y,maxX,minX,maxY,minY,1,NodeName); 
 	    	}
 	    }
-	    g.drawString(NodeName, x+3, y-5);
+	    g.drawString(NodeName, x+5, y-7);
+	    g.fillOval(x-4, y-8,10,10);
     }
     
 }
